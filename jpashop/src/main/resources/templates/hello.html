@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- html : name space -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hello</title>
+</head>
+<body>
+<p th:text="'안녕! ' + ${data}">안녕하세요. 손님</p>
+<!-- 서버사이드 업데이트 후 확인하려면 매번 서버를 껐따 켜줘야 하는데
+	 자주 바꾸다 보면 짜증남! 라이브러리 중 spring-boot-devtools 넣어주면 해결 : 모르고 계속 넣어서 쓰긴 했음
+	 gradle dependensy 추가 후 다시 run 했을 때 [ restartedMain ] 뜨면 적용 된 것
+	 	타임리프 html 파일 수정 후 저장 한 다음 서버에서 새로고침 했을 때 바로 변경된 것 확인 됨 -->
+</body>
+</html>
