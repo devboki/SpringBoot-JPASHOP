@@ -18,7 +18,16 @@ public class ItemService {
 	
 	@Transactional
 	public void saveItem(Item item) {
-		itemRepository.save(item);
+		itemRepository.save(item); //merge로 모두 변경. 가급적이면 사용X
+	}
+	
+	@Transactional
+	public void updateItem(Long itemId, String name, int price, int stockQuantity) {
+		Item findItem = itemRepository.findOne(itemId);
+		findItem.setName(name);
+		findItem.setPrice(price);
+		findItem.setStockQuantity(stockQuantity);
+		//더 좋은 방법은 findItem.change(name, price, stockQuantity); 로 메서드 활용. set은 추적하기 어렵기 때문 
 	}
 	
 	public List<Item> findItems(){

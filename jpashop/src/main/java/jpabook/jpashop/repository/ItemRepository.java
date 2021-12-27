@@ -19,7 +19,7 @@ public class ItemRepository {
 		if(item.getId() == null) {
 			em.persist(item);
 		} else {
-			em.merge(item); //update 의미로
+			em.merge(item); //트랜잭션 커밋 시점에 모두 변경됨
 		}
 	}
 	
