@@ -1,7 +1,11 @@
 package jpabook.jpashop.api;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +23,34 @@ import lombok.RequiredArgsConstructor;
 public class MemberApiController {
 
 	private final MemberService memberService;
+	
+	//회원조회 API 1) 노출하고 싶지 않은 엔티티는 @JsonIgnore 그렇지만 역시 엔티티가 변경되면 API 스펙이 변경되므로 DTO 사용하기
+	@GetMapping("/api/v1/members")
+	public List<Member> membersV1(){
+		return memberService.findMembers();
+	}
+	
+	//회원조회 API 2)
+	@GetMapping("/api/v2/members")
+	public Result membersV2() {
+		List<Member> findMembers = memberService.findMembers();
+		List<MemberDto> collect = findMembers.stream().map(m -> new MemberDto(m.getName()))
+													.collect(Collectors.toList());
+		return new Result(collect.size(), collect);
+	}
+	
+	@Data
+	@AllArgsConstructor
+	static class Result<T> { //조회할 값이 json[data:{...}]로 나가면 유연성이 떨어짐
+		private int count;	 //요구사항이 추가되어도 OK. 유지보수성 높음
+		private T data;
+	}
+	
+	@Data
+	@AllArgsConstructor
+	static class MemberDto {
+		private String name;
+	}
 	
 	//회원등록 API 1) 엔티티 노출 X
 	@PostMapping("/api/v1/members")
@@ -44,11 +76,10 @@ public class MemberApiController {
 												@RequestBody @Valid UpdateMemberRequest request) {
 		
 		memberService.update(id, request.getName());
-		Member findMember = memberService.findOne(id); //이런 스타일이 유지보수성 높아짐
+		Member findMember = memberService.findOne(id); //유지보수성 증대
 		
 		return new UpdateMemberResponse(findMember.getId(), findMember.getName());
 	}
-	
 	
 	@Data
 	@AllArgsConstructor
