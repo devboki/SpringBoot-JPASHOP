@@ -31,7 +31,7 @@ public class Order {
 	
 	@Id @GeneratedValue
 	@Column(name = "order_id")
-	private Long idLong;
+	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id")
@@ -44,7 +44,7 @@ public class Order {
 	@JoinColumn(name = "delivery_id")
 	private Delivery delivery;
 	
-	private  LocalDateTime orderDateTime;
+	private  LocalDateTime orderDate;
 	
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
@@ -78,7 +78,7 @@ public class Order {
 		}
 		
 		order.setStatus(OrderStatus.ORDER);
-		order.setOrderDateTime(LocalDateTime.now());
+		order.setOrderDate(LocalDateTime.now());
 		
 		return order;
 	}

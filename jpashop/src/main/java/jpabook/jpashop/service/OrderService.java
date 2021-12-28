@@ -52,7 +52,7 @@ public class OrderService {
 		//주문 저장
 		orderRepository.save(order);
 		
-		return order.getIdLong();
+		return order.getId();
 	}
 	
 	
