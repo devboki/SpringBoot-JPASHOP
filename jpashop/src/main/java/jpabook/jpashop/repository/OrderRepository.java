@@ -104,5 +104,22 @@ public class OrderRepository {
 		return query.getResultList();
 		}
 
+	//SimpleApiController - Order 조회를 위한 fetch join
+	public List<Order> findAllWithMemberDelivery() {
+		return em.createQuery("select o from Order o"
+								+ " join fetch o.member m"
+								+ " join fetch o.delivery d", Order.class
+							).getResultList();
+	}
+
+	//v3과 결과는 똑같으나 원하는 것만 select 가능
+	public List<OrderSimpleQueryDto> findOrderDtos() {
+		return em.createQuery("select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) "
+								+ "from Order o "
+								+ "join o.member m "
+								+ "join o.delivery d", OrderSimpleQueryDto.class
+							).getResultList();
+	}
+
 	
 }
