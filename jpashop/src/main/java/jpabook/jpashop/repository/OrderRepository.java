@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -104,12 +105,23 @@ public class OrderRepository {
 		return query.getResultList();
 		}
 
-	//SimpleApiController - Order 조회를 위한 fetch join
+	//fetch join
 	public List<Order> findAllWithMemberDelivery() {
 		return em.createQuery("select o from Order o"
 								+ " join fetch o.member m"
 								+ " join fetch o.delivery d", Order.class
 							).getResultList();
+	}
+	
+	//xToOne join + paging
+	//yml '[default_batch_fetch_size]': 100
+	public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+		return em.createQuery("select o from Order o"
+				+ " join fetch o.member m"
+				+ " join fetch o.delivery d", Order.class
+			).setFirstResult(offset)
+			 .setMaxResults(limit)
+			 .getResultList();
 	}
 
 	//v3과 결과는 똑같으나 원하는 것만 select 가능
@@ -120,6 +132,18 @@ public class OrderRepository {
 								+ "join o.delivery d", OrderSimpleQueryDto.class
 							).getResultList();
 	}
-
 	
+	//DTO : fetch join. 
+	//distinct로 중복제거 가능하지만 페이징 불가능. 필요한 order 기준으로 페이징 X, data 뻥튀기 된 item 기준으로 페이징이 되므로 hibernate WARN 발생
+	public List<Order> findAllWithItem() {
+		return em.createQuery(
+						"select distinct o from Order o"
+						+ " join fetch o.member m"
+						+ " join fetch o.delivery d"
+						+ " join fetch o.orderItems oi"
+						+ " join fetch oi.item i", Order.class)
+			  //.setFirstResult(1)
+			  //.setMaxResults(100)
+				.getResultList();
+	}
 }
