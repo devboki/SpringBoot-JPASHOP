@@ -13,6 +13,7 @@ import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderSimpleApiController {
 
 	private final OrderRepository orderRepository;
+	private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 	
 	//주문 조회 1) 문제1 무한루프! 이런 경우 양방향매핑이 되어 있는 엔티티 중 하나에 @JsonIgnore 선언해야함
 	//			문제2 Type definition error : Hibernate5Module 추가 -> null 조회 됨 
@@ -62,7 +64,7 @@ public class OrderSimpleApiController {
 	//			v3 결과와 join 부분은 같으나 select 절에서 원하는 것만 선택 가능. 리포지토리 재사용성이 떨어짐.
 	@GetMapping("/api/v4/simple-orders")
 	public List<OrderSimpleQueryDto> ordersV4(){
-		return orderRepository.findOrderDtos();
+		return orderSimpleQueryRepository.findOrderDtos();
 	}
 	
 	@Data

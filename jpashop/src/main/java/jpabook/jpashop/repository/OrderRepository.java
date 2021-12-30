@@ -123,15 +123,6 @@ public class OrderRepository {
 			 .setMaxResults(limit)
 			 .getResultList();
 	}
-
-	//v3과 결과는 똑같으나 원하는 것만 select 가능
-	public List<OrderSimpleQueryDto> findOrderDtos() {
-		return em.createQuery("select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) "
-								+ "from Order o "
-								+ "join o.member m "
-								+ "join o.delivery d", OrderSimpleQueryDto.class
-							).getResultList();
-	}
 	
 	//DTO : fetch join. 
 	//distinct로 중복제거 가능하지만 페이징 불가능. 필요한 order 기준으로 페이징 X, data 뻥튀기 된 item 기준으로 페이징이 되므로 hibernate WARN 발생
