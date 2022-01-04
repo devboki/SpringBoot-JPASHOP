@@ -41,13 +41,13 @@ public class MemberService {
 	
 	//한명 조회
 	public Member findOne(Long memberId) {
-		return memberRepository.findOne(memberId);
+		return memberRepository.findById(memberId).get();
 	}
 	
 	//회원 수정(API)
 	@Transactional
 	public void update(Long id, String name) {
-		Member member = memberRepository.findOne(id); //영속성 컨텍스트에서 가져와서
+		Member member = memberRepository.findById(id).get(); //영속성 컨텍스트에서 가져와서
 		member.setName(name); //업데이트
 	}
 	

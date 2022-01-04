@@ -2,36 +2,13 @@ package jpabook.jpashop.repository;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import jpabook.jpashop.domain.Member;
-import lombok.RequiredArgsConstructor;
 
-//자동으로 spring bean으로 등록해주는 어노테이션
-@Repository
-@RequiredArgsConstructor
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-	private final EntityManager em;
-	
-	public void save(Member member) { 
-		em.persist(member);
-	} 
-	
-	public Member findOne(Long id) {
-		return em.find(Member.class, id);
-	}
-	
-	public List<Member> findAll(){
-		return em.createQuery("select m from Member m", Member.class) //JPQL : Entity 객체를 대상으로 처리
-					.getResultList();
-	}
-	
-	public List<Member> findByName(String name){
-		return em.createQuery("select m from Member m where m.name = :name", Member.class)
-				.setParameter("name", name)
-				.getResultList();
-	}
+	List<Member> findByName(String name); 
+	//select m from Member m where m.name = ? 메서드에 따른 
+
 }
